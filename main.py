@@ -1,6 +1,7 @@
 import os
 import openai
 import re
+from flask import request, json
 from slack_bolt import App
 from slack_bolt.adapter.socket_mode import SocketModeHandler
 from time import sleep
@@ -39,6 +40,16 @@ async def command_handler(body, say):
         await say("予期しないエラーが発生しました。")
     finally:
         sleep(1)  # レート制限のためのスリープ
+
+@app.route("/slack/events", methods=["POST"])
+def slack_events():
+    payload = request.form.get("payload")
+    if payload:
+        payload = json.loads(payload)
+        if "challenge" in payload:
+            return payload["challenge"]
+    return ""
+
 
 if __name__ == "__main__":
     handler = SocketModeHandler(app, os.environ["SLACK_APP_TOKEN"])
