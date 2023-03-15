@@ -1,13 +1,15 @@
 import os
 import openai
 import re
-from flask import request, json
-from slack_bolt import App
-from slack_bolt.adapter.socket_mode import SocketModeHandler
-from time import sleep
+import json
+from flask import Flask, request, jsonify
+from slack_sdk import WebClient
+from slack_sdk.errors import SlackApiError
+
+app = Flask(__name__)
 
 openai.api_key = os.environ["OPENAI_API_KEY"]
-app = App()
+slack_client = WebClient(token=os.environ["SLACK_BOT_TOKEN"])
 
 def chatgpt_query(prompt):
     response = openai.Completion.create(
@@ -21,36 +23,33 @@ def chatgpt_query(prompt):
     message = response.choices[0].text.strip()
     return message
 
-@app.event("app_mention")
-async def command_handler(body, say):
-    text = body['event']['text']
-    bot_user_id = body['event']['user']
-
-    # ボットのユーザー名部分を削除
-    prompt = re.sub(f"<@{bot_user_id}>", "", text).strip()
-
-    try:
-        response = chatgpt_query(prompt)
-        await say(response)
-    except openai.OpenAIError as e:
-        print(f"OpenAI Error: {e}")
-        await say("エラーが発生しました。しばらくしてからもう一度お試しください。")
-    except Exception as e:
-        print(f"Error: {e}")
-        await say("予期しないエラーが発生しました。")
-    finally:
-        sleep(1)  # レート制限のためのスリープ
-
-@app.route("/slack/events", methods=["POST"])
-def slack_events():
+@app.route('/slack/events', methods=['POST'])
+def handle_slack_event():
     payload = request.form.get("payload")
     if payload:
         payload = json.loads(payload)
         if "challenge" in payload:
             return payload["challenge"]
-    return ""
 
+    event = json.loads(request.form["payload"])["event"]
+
+    if event.get("type") == "app_mention":
+        text = event['text']
+        bot_user_id = event['user']
+        channel = event['channel']
+
+        prompt = re.sub(f"<@{bot_user_id}>", "", text).strip()
+
+        try:
+            response = chatgpt_query(prompt)
+            slack_client.chat_postMessage(channel=channel, text=response)
+        except openai.OpenAIError as e:
+            print(f"OpenAI Error: {e}")
+            slack_client.chat_postMessage(channel=channel, text="エラーが発生しました。しばらくしてからもう一度お試しください。")
+        except SlackApiError as e:
+            print(f"Slack API Error: {e}")
+
+    return ('', 204)
 
 if __name__ == "__main__":
-    handler = SocketModeHandler(app, os.environ["SLACK_APP_TOKEN"])
-    handler.start()
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
