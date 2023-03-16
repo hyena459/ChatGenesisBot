@@ -20,16 +20,12 @@ def mention_handler(body, say):
 
     try:
         # GPT-3.5-turboを使ってリクエストを生成
-        response = openai.Completion.create(
-            engine="gpt-3.5-turbo",
-            prompt=prompt,
-            max_tokens=150,
-            n=1,
-            stop=None,
-            temperature=0.5,
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": prompt}],
         )
         # 返信を取得し、Slackに送信
-        reply = response.choices[0].text.strip()
+        reply = response.choices[0].message.content.strip()
         logging.debug(f"Reply a message: {reply}")
         say(f'<@{user}> {reply}')
     except Exception as e:
