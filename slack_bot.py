@@ -7,6 +7,7 @@ openai.api_key = os.environ["OPENAI_API_KEY"]
 app = App()
 
 @app.event("app_mention")
+async def command_handler(body, say):
     text = body['event']['text']
     user = body['event']['user']
 
@@ -15,7 +16,7 @@ app = App()
 
     # GPT-3.5-turboを使ってリクエストを生成
     response = openai.Completion.create(
-        engine="gpt-3.5-turbo",
+        engine="text-davinci-002",
         prompt=prompt,
         max_tokens=150,
         n=1,
