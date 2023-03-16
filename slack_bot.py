@@ -32,6 +32,7 @@ messages = add_message(messages, "system", initial_system_message, max_tokens)
 
 @app.event("app_mention")
 def mention_handler(body, say):
+    global messages
     text = body['event']['text']
     user = body['event']['user']
 
@@ -48,7 +49,6 @@ def mention_handler(body, say):
             messages=messages,
             temperature=0.8,
             max_tokens=80,
-            stream=True,
         )
 
         # 返信を取得し、Slackに送信
