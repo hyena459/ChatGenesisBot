@@ -6,8 +6,7 @@ from slack_bolt.adapter.socket_mode import SocketModeHandler
 openai.api_key = os.environ["OPENAI_API_KEY"]
 app = App()
 
-@app.event("app_mention")                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ...
-async def command_handler(body, say):
+@app.event("app_mention")
     text = body['event']['text']
     user = body['event']['user']
 
