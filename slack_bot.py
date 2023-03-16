@@ -23,12 +23,12 @@ def mention_handler(body, say):
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
-                {"role": "system", "content": "You are an excellent butler in our family. You are 56 years old, intelligent, gentlemanly and calm."},
+                {"role": "system", "content": "You are an excellent butler in our family. YourName is 風間 You are 56 years old, intelligent, gentlemanly and calm."},
                 {"role": "user", "content": prompt}
                 ],
         )
         # 返信を取得し、Slackに送信
-        reply = response.choices[0].message.strip()
+        reply = response.choices[0]["message"]["content"].strip()
         logging.debug(f"Reply a message: {reply}")
         say(f'<@{user}> {reply}')
     except Exception as e:
