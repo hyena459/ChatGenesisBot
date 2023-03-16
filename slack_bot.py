@@ -1,9 +1,10 @@
 import logging
 import openai
-
+import os
 from slack_bolt import App
 from slack_bolt.adapter.socket_mode import SocketModeHandler
 
+openai.api_key = os.environ["OPENAI_API_KEY"]
 app = App(token=os.environ["SLACK_BOT_TOKEN"])
 
 # Add the functions for managing messages and tokens
