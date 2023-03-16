@@ -63,5 +63,5 @@ def mention_handler(body, say):
     except Exception as e:
         logging.error(f"Error: {e}")
 
-handler = SocketModeHandler(app, "SLACK_APP_TOKEN")
+handler = SocketModeHandler(app, os.environ["SLACK_APP_TOKEN"])
 handler.start()
