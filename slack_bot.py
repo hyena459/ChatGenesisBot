@@ -33,10 +33,10 @@ logging.basicConfig(level=logging.DEBUG)
 #     await say(f'<@{user}> {reply}')
 
 @app.event("app_mention")
-async def test_handler(body, say):
+def mention_handler(body, say):
     print("Test handler triggered")
     try:
-        await say("Hello, I'm here!")
+        say("Hello, I'm here!")
     except Exception as e:
         print(f"Error: {e}")
 
