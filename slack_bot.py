@@ -21,7 +21,7 @@ def mention_handler(body, say):
     try:
         # GPT-3.5-turboを使ってリクエストを生成
         response = openai.Completion.create(
-            engine="chatgpt-3.5-turbo",
+            engine="gpt-3.5-turbo",
             prompt=prompt,
             max_tokens=150,
             n=1,
