@@ -10,6 +10,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 @app.event("app_mention")
 async def command_handler(body, say):
+    logging.debug("Received app_mention event")
     text = body['event']['text']
     user = body['event']['user']
     logging.debug(f"Received a message: {text}")
