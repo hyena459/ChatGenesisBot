@@ -48,7 +48,7 @@ def mention_handler(body, say):
             model="gpt-3.5-turbo",
             messages=messages,
             temperature=0.8,
-            max_tokens=80,
+            max_tokens=300,
         )
 
         # 返信を取得し、Slackに送信
