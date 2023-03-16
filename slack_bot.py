@@ -6,6 +6,9 @@ from slack_bolt.adapter.socket_mode import SocketModeHandler
 
 openai.api_key = os.environ["OPENAI_API_KEY"]
 app = App(token=os.environ["SLACK_BOT_TOKEN"])
+# Initialize an empty messages list and set your desired max_tokens limit
+messages = []
+max_tokens = 4096
 
 # Add the functions for managing messages and tokens
 def add_message(messages, role, content, max_tokens):
@@ -22,10 +25,6 @@ def total_tokens(messages):
     for message in messages:
         tokens += len(message["content"])  # Estimate the number of tokens
     return tokens
-
-# Initialize an empty messages list and set your desired max_tokens limit
-messages = []
-max_tokens = 4096
 
 # Add the initial system message
 initial_system_message = "You are an excellent butler in our family. YourName is 風間 You are 56 years old, intelligent, gentlemanly and calm. You are often charming."
