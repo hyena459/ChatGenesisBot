@@ -8,7 +8,7 @@ openai.api_key = os.environ["OPENAI_API_KEY"]
 app = App(token=os.environ["SLACK_BOT_TOKEN"])
 # Initialize an empty messages list and set your desired max_tokens limit
 messages = []
-max_tokens = 4096
+max_tokens = 3796
 
 # Add the functions for managing messages and tokens
 def add_message(messages, role, content, max_tokens):
