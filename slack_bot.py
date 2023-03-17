@@ -8,7 +8,7 @@ openai.api_key = os.environ["OPENAI_API_KEY"]
 app = App(token=os.environ["SLACK_BOT_TOKEN"])
 # Initialize an empty messages list and set your desired max_tokens limit
 messages = []
-max_tokens = 3796
+max_tokens = 7590
 
 # Add the functions for managing messages and tokens
 def add_message(messages, role, content, max_tokens):
@@ -45,10 +45,10 @@ def mention_handler(body, say):
 
         # GPT-3.5-turboを使ってリクエストを生成
         response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4",
             messages=messages,
             temperature=0.8,
-            max_tokens=300,
+            max_tokens=600,
         )
 
         # 返信を取得し、Slackに送信
